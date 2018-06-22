@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: meshlab-ui
+  name: meshlab-ui
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: meshlab-ui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: meshlab-ui
+  name: meshlab-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meshlab-ui
+  template:
+    metadata:
+      labels:
+        app: meshlab-ui
+    spec:
+      containers:
+      - image: quay.io/lander2k2/meshlab_ui:0.0.1
+        name: meshlab-ui
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
