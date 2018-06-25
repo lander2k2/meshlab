@@ -1,15 +1,52 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
+type PageContent struct {
+	Data string
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Meshlab Index")
+
+	log.Println("Index page requested")
+
+	// parse page template
+	tmpl, err := template.ParseFiles("/index.html")
+	if err != nil {
+		log.Println("Failed to parse template", err)
+	}
+
+	// call data service
+	resp, err := http.Get("http://meshlab-data-svc/timedata")
+	if err != nil {
+		log.Println("Failed to get response from data service")
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Failed to read data service response")
+	}
+
+	content := PageContent{
+		Data: string(data),
+	}
+
+	// write out templated page
+	tmpl.Execute(w, content)
+
+	log.Println("Index page served")
+}
+
+func getDataSvc() {
 }
 
 func main() {
+	log.Println("Starting meshlab ui")
 	http.HandleFunc("/", index)
 	http.ListenAndServe(":8080", nil)
 }
