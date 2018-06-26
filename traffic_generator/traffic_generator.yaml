@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: meshlab-traffic-config
+data:
+  meshlab_url: ""  # <---- put istio ingress gateway ELB DNS name here
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: meshlab-traffic-generator
+  name: meshlab-traffic-generator
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8089
+  selector:
+    app: meshlab-traffic-generator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: meshlab-traffic-generator
+  name: meshlab-traffic-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meshlab-traffic-generator
+  template:
+    metadata:
+      labels:
+        app: meshlab-traffic-generator
+    spec:
+      containers:
+      - image: quay.io/lander2k2/meshlab_traffic_generator:0.1
+        name: meshlab-traffic-generator
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
+        env:
+        - name: MESHLAB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: meshlab-traffic-config
+              key: meshlab_url
+      restartPolicy: Always
+

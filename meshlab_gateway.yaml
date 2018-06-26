@@ -25,10 +25,30 @@ spec:
   http:
   - match:
     - uri:
-        exact: /
+        exact: /ui
     route:
     - destination:
         host: meshlab-ui
         port:
           number: 80
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: meshlab-traffic-generator
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: meshlab-ext
+spec:
+  hosts:
+  - ""  # <---- put istio ingress gateway ELB DNS name here
+  ports:
+  - number: 80
+    name: http
+    protocol: HTTP
 
