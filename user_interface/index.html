@@ -6,9 +6,12 @@
     <body>
         <h1>Welcome to the Meshlab</h1>
         <hr>
+        {{range $index, $val := .}}
         <p>
-            Data service said:</br>
-            {{.Data}}
+            {{.Name}} service said:</br>
+            {{.Response}}
         </p>
+        <hr>
+        {{end}}
     </body>
 </html>

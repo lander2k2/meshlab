@@ -30,7 +30,7 @@ spec:
         app: meshlab-ui
     spec:
       containers:
-      - image: quay.io/lander2k2/meshlab_ui:0.1
+      - image: quay.io/lander2k2/meshlab_ui:0.2
         name: meshlab-ui
         imagePullPolicy: Always
         ports:

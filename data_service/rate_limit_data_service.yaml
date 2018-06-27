@@ -1,0 +1,64 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: meshlab-rate-limit-data-svc
+spec:
+  hosts:
+  - meshlab-rate-limit-data-svc
+  http:
+  - route:
+    - destination:
+        host: meshlab-rate-limit-data-svc
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: meshlab-rate-limit-data-svc
+spec:
+  host: meshlab-rate-limit-data-svc
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: meshlab-rate-limit-data-svc
+    version: v1
+  name: meshlab-rate-limit-data-svc
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: meshlab-rate-limit-data-svc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: meshlab-rate-limit-data-svc
+  name: meshlab-rate-limit-data-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meshlab-rate-limit-data-svc
+  template:
+    metadata:
+      labels:
+        app: meshlab-rate-limit-data-svc
+    spec:
+      containers:
+      - image: quay.io/lander2k2/meshlab_data_svc:0.1
+        name: rate-limit-data-svc
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
