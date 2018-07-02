@@ -21,7 +21,7 @@ Assuming you have a running Kubernetes cluster with Istio installed and automati
 4. Deploy the meshlab gateway, virtual service and service entry.
 
 ```
-    $ kubectl apply -f meshlab-gateway.yaml
+    $ kubectl apply -f meshlab_gateway.yaml
 ```
 
 5. See the instructions in `./user_interface`, `./data_service` and `./traffic_generator` for further steps on deploying those components..
