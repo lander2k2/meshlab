@@ -20,6 +20,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	services := []Service{
 		{Name: "LB Data", Endpoint: "http://meshlab-lb-data-svc/timedata"},
 		{Name: "Rate Limit Data", Endpoint: "http://meshlab-rate-limit-data-svc/timedata"},
+		{Name: "Canary Data", Endpoint: "http://meshlab-canary-data-svc/version"},
 	}
 
 	tmpl, err := template.ParseFiles("/index.html")

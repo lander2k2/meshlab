@@ -4,7 +4,7 @@
 
 ```
     $ export IMAGE_REPO=quay.io/myimages/meshlab_ui
-    $ export IMAGE_TAG=0.1
+    $ export IMAGE_TAG=0.2
     $ make
 ```
 
