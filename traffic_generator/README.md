@@ -23,6 +23,6 @@
 4. Deploy
 
 ```
-    $ kubectl apply -f ui.yaml
+    $ kubectl apply -f traffic_generator.yaml
 ```
 
