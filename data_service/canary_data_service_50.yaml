@@ -81,6 +81,8 @@ spec:
     spec:
       containers:
       - image: quay.io/lander2k2/meshlab_data_svc:0.2
+        #command: ["/data-svc", "error"]  # will induce intermittent 500s
+        #command: ["/data-svc", "slow"]  # will take 5 seconds to respond to all requests
         name: canary-data-svc
         imagePullPolicy: Always
         ports:

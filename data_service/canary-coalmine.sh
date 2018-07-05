@@ -23,6 +23,16 @@ kubectl apply -f canary_data_service_3.yaml
 echo "Observe the canary..."
 observe 30
 
+echo "Check for excessive errors..."
+./error-check.sh
+if [ $? -ne 0 ]; then
+    echo "Error check failed - abort deployment"
+    kubectl apply -f canary_data_service_0.yaml
+    exit
+else
+    echo "Error check passed"
+fi
+
 echo "Canary is still chirping - send a few miners!"
 kubectl apply -f canary_data_service_20.yaml
 
