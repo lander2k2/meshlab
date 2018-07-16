@@ -1,0 +1,89 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: meshlab-canary-data-svc
+spec:
+  hosts:
+  - meshlab-canary-data-svc
+  http:
+  - route:
+    - destination:
+        host: meshlab-canary-data-svc
+        subset: version0.1
+      weight: 50
+    - destination:
+        host: meshlab-canary-data-svc
+        subset: version0.2
+      weight: 50
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: meshlab-canary-data-svc
+spec:
+  host: meshlab-canary-data-svc
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+  subsets:
+  - name: version0.1
+    labels:
+      version: v0.1
+  - name: version0.2
+    labels:
+      version: v0.2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meshlab-canary-data-svc
+  labels:
+    app: meshlab-canary-data-svc
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: meshlab-canary-data-svc
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: meshlab-canary-data-svc-v0-1
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: meshlab-canary-data-svc
+        version: v0.1
+    spec:
+      containers:
+      - image: quay.io/lander2k2/meshlab_data_svc:0.1
+        name: canary-data-svc
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: meshlab-canary-data-svc-v0-2
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: meshlab-canary-data-svc
+        version: v0.2
+    spec:
+      containers:
+      - image: quay.io/lander2k2/meshlab_data_svc:0.2
+        command: ["/data-svc", "error"]  # will induce intermittent 500s
+        name: canary-data-svc
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+

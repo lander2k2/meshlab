@@ -7,6 +7,8 @@ COMPLETE="false"
 R200=0
 R500=0
 
+TARGET_VERSION=$1
+
 while [ "$COMPLETE" == "false" ]; do
     RESULT=$(echo $RESP | jq ".data.result[$INDEX]")
     if [ "$RESULT" == "null" ]; then
@@ -19,10 +21,10 @@ while [ "$COMPLETE" == "false" ]; do
 
     echo "$VERSION: $COUNT x $CODE response code"
 
-    if (( "${CODE//\"}" == 500 )); then
-        if (( "${COUNT//\"}" > 50 )); then
+    if (( "${CODE//\"}" == 500 )) \
+        && (( "${COUNT//\"}" > 10 )) \
+        && [ "${VERSION//\"}" == "${TARGET_VERSION}" ]; then
             exit 1
-        fi
     fi
 
     INDEX=$((INDEX+1))
