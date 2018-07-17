@@ -9,7 +9,7 @@ spec:
   - route:
     - destination:
         host: meshlab-canary-data-svc
-        subset: version0.2.3
+        subset: version0.2.2
       weight: 100
 ---
 apiVersion: networking.istio.io/v1alpha3
@@ -22,9 +22,9 @@ spec:
     tls:
       mode: ISTIO_MUTUAL
   subsets:
-  - name: version0.2.3
+  - name: version0.2.2
     labels:
-      version: v0.2.3
+      version: v0.2.2
 ---
 apiVersion: v1
 kind: Service
@@ -44,14 +44,14 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: meshlab-canary-data-svc-v0-2-3
+  name: meshlab-canary-data-svc-v0-2-2
 spec:
   replicas: 3
   template:
     metadata:
       labels:
         app: meshlab-canary-data-svc
-        version: v0.2.3
+        version: v0.2.2
     spec:
       containers:
       - image: quay.io/lander2k2/meshlab_data_svc:0.2

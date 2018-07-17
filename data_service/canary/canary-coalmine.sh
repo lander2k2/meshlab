@@ -34,6 +34,17 @@ deploy_check() {
     else
         echo "Performance check passed"
     fi
+
+    ./requests-check.sh $VERSION
+    if [ $? -ne 0 ]; then
+        echo "Requests check failed - abort deployment"
+        kubectl apply -f $MODE/canary_data_service_0.yaml
+        kubectl delete deploy $DEPLOY_NAME
+        exit
+    else
+        echo "Requests check passed"
+    fi
+
 }
 
 echo "Initialize!"
