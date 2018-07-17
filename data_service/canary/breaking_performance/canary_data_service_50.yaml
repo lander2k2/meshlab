@@ -51,7 +51,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: meshlab-canary-data-svc-v0.1
+  name: meshlab-canary-data-svc-v0-1
 spec:
   replicas: 2
   template:
@@ -70,7 +70,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: meshlab-canary-data-svc-v0-2
+  name: meshlab-canary-data-svc-v0-2-1
 spec:
   replicas: 2
   template:
