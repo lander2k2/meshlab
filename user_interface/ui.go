@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Service struct {
@@ -13,15 +14,9 @@ type Service struct {
 	Response string
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request, services []Service) {
 
 	log.Println("Index page requested")
-
-	services := []Service{
-		{Name: "LB Data", Endpoint: "http://meshlab-lb-data-svc/timedata"},
-		{Name: "Rate Limit Data", Endpoint: "http://meshlab-rate-limit-data-svc/timedata"},
-		{Name: "Canary Data", Endpoint: "http://meshlab-canary-data-svc/version"},
-	}
 
 	tmpl, err := template.ParseFiles("/index.html")
 	if err != nil {
@@ -50,11 +45,31 @@ func index(w http.ResponseWriter, r *http.Request) {
 	log.Println("Index page served")
 }
 
-func getDataSvc() {
-}
-
 func main() {
 	log.Println("Starting meshlab ui")
-	http.HandleFunc("/", index)
+
+	args := os.Args
+	arg := ""
+	if len(args) > 1 {
+		arg = args[1]
+	}
+
+	services := []Service{
+		{Name: "LB Data", Endpoint: "http://meshlab-lb-data-svc/timedata"},
+		{Name: "Rate Limit Data", Endpoint: "http://meshlab-rate-limit-data-svc/timedata"},
+		{Name: "Canary Data", Endpoint: "http://meshlab-canary-data-svc/version"},
+	}
+	if arg == "no-canary" {
+		services = []Service{
+			{Name: "LB Data", Endpoint: "http://meshlab-lb-data-svc/timedata"},
+			{Name: "Rate Limit Data", Endpoint: "http://meshlab-rate-limit-data-svc/timedata"},
+		}
+	}
+
+	//http.HandleFunc("/", index)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		index(w, r, services)
+	})
+
 	http.ListenAndServe(":8080", nil)
 }

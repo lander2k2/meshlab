@@ -30,7 +30,8 @@ spec:
         app: meshlab-ui
     spec:
       containers:
-      - image: quay.io/lander2k2/meshlab_ui:0.2
+      - image: quay.io/lander2k2/meshlab_ui:0.3
+        #command: ["/ui", "no-canary"]  # will not make calls to canary back-end
         name: meshlab-ui
         imagePullPolicy: Always
         ports:
