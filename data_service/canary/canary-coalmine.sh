@@ -49,13 +49,13 @@ deploy_check() {
 
 echo "Initialize!"
 
-echo "Deploy v1"
+echo "Deploy v0.1"
 kubectl apply -f $MODE/canary_data_service_0.yaml
 
 echo "Observe v1 deployment..."
 observe 30
 
-echo "Send the canary down the coalmine!"
+echo "Send the v0.2 canary down the coalmine!"
 kubectl apply -f $MODE/canary_data_service_3.yaml
 
 echo "Observe the canary..."
@@ -88,6 +88,6 @@ kubectl apply -f $MODE/canary_data_service_100.yaml
 echo "Observe the glory..."
 observe 30
 
-echo "Clean up"
+echo "Clean up the old v0.1 deployment"
 kubectl delete deploy meshlab-canary-data-svc-v0-1
 
