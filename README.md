@@ -1,6 +1,6 @@
 # Meshlab
 
-A collection of components to test features and develop solutions in an Istio service mesh.
+A collection of components to test features and develop solutions in an Istio service mesh.  Tested with Istio v0.8.
 
 Assuming you have a running Kubernetes cluster with Istio installed and automatic sidecar injection:
 
